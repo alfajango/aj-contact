@@ -7,6 +7,21 @@ require 'pony'
 
 configure do
   DB = Sequel.connect(ENV['DATABASE_URL'] || 'postgres://postgres@localhost/aj_contact')
+
+  if ENV['SENDGRID_USERNAME']
+    Pony.options = {
+      :via => :smtp,
+      :via_options => {
+        :address => 'smtp.sendgrid.net',
+        :port => '587',
+        :domain => 'heroku.com',
+        :user_name => ENV['SENDGRID_USERNAME'],
+        :password => ENV['SENDGRID_PASSWORD'],
+        :authentication => :plain,
+        :enable_starttls_auto => true
+      }
+    }
+  end
 end
 
 DB.create_table :submissions, :if_not_exists => true do
