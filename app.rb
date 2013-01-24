@@ -38,5 +38,5 @@ post '/contact' do
   puts params
   Submission.create(:name => params[:full_name], :email => params[:email], :message => params[:message])
   Pony.mail :to => "support@alfajango.com", :from => params[:email], :subject => "[AJ Contact Form] Submission from #{params[:full_name]}", :body => erb(:email)
-  redirect 'http://localhost:4000/thank_you'
+  redirect ENV['REDIRECT_URL'] || 'http://localhost:4000/thank_you'
 end
