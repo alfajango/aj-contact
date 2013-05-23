@@ -33,6 +33,11 @@ end
 
 class Submission < Sequel::Model; end
 
+get '/wakeup' do
+  puts "Waking up..."
+  render :nothing => true, :status => 200
+end
+
 post '/contact' do
   puts "Contact submission:"
   puts params
