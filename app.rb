@@ -35,7 +35,11 @@ class Submission < Sequel::Model; end
 
 get '/wakeup' do
   puts "Waking up..."
-  render :nothing => true, :status => 200
+  accepted_hosts.each do |h|
+    response['Access-Control-Allow-Origin'] = h if request.referrer.start_with?(h)
+  end
+  status 200
+  body ""
 end
 
 post '/contact' do
@@ -43,5 +47,9 @@ post '/contact' do
   puts params
   Submission.create(:name => params[:full_name], :email => params[:email], :message => params[:message])
   Pony.mail :to => "support@alfajango.com", :from => params[:email], :subject => "[AJ Contact Form] Submission from #{params[:full_name]}", :body => erb(:email)
-  redirect ENV['REDIRECT_URL'] || 'http://localhost:4000/thank_you'
+  redirect ENV['REDIRECT_URL'] || 'http://localhost:3000/thank_you'
+end
+
+def accepted_hosts
+  %w(http://localhost:3000 http://www.alfajango.com)
 end
