@@ -31,6 +31,12 @@ DB.create_table :submissions, :if_not_exists => true do
     String :message
 end
 
+migration "add page url to submissions" do
+  database.alter_table :submissions do
+    add_column :page_url, :text
+  end
+end
+
 class Submission < Sequel::Model; end
 
 get '/wakeup' do
@@ -46,7 +52,7 @@ post '/contact' do
   puts "Contact submission:"
   puts params
   if params[:catch_me].nil? || params[:catch_me] == ""
-    Submission.create(:name => params[:full_name], :email => params[:email], :message => params[:message])
+    Submission.create(:name => params[:full_name], :email => params[:email], :message => params[:message], :page_url => params[:page_url])
     Pony.mail :to => "support@alfajango.com", :from => params[:email], :subject => "[AJ Contact Form] Submission from #{params[:full_name]}", :body => erb(:email)
   else
     puts "Catch-me filled out. Skipping save-and-send."
