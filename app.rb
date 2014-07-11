@@ -31,11 +31,7 @@ DB.create_table :submissions, :if_not_exists => true do
     String :message
 end
 
-migration "add page url to submissions" do
-  database.alter_table :submissions do
-    add_column :page_url, :text
-  end
-end
+DB.add_column :submissions, :page_url, :text unless DB.schema(:submissions).map(&:first).include?(:page_url)
 
 class Submission < Sequel::Model; end
 
