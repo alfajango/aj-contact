@@ -57,5 +57,5 @@ post '/contact' do
 end
 
 def accepted_hosts
-  %w(http://localhost:3000 http://www.alfajango.com)
+  %w(http://localhost:3000 http://www.alfajango.com https://www.alfajango.com)
 end
